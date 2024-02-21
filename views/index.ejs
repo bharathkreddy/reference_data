@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fund Reference</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<h1 id="maintitle">Fund Reference Database</h1>
+<div class="container">
+
+    <!-- Display Funds in a Table -->
+    <table>
+        <thead>
+        <tr>
+            <th>User Bank</th>
+            <th>Account Number</th>
+            <th>Active Date</th>
+            <th>Valid To Date</th>
+            <th>Fund Name</th>
+            <th>Multi Manager</th>
+            <th>Legal Structure</th>
+            <th>Distribution Date</th>
+            <th>Performance Fee Rate</th>
+            <th>TER</th>
+            <th>Valuation Point</th>
+            <th>Internal SLA</th>
+            <th>External SLA</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% funds.forEach(fund => { %>
+            <tr>
+                <td><%= fund.userbank %></td>
+                <td><%= fund.accountnumber %></td>
+                <td><%= fund.activedate.toDateString() %></td>
+                <td><%= fund.validtodate.toDateString() %></td>
+                <td><%= fund.fundname %></td>
+                <td><%= fund.multimanager ? 'Yes' : 'No' %></td>
+                <td><%= fund.legalstructure %></td>
+                <td><%= fund.distributiondate %></td>
+                <td><%= fund.performancefeerate %>%</td>
+                <td><%= fund.ter %>%</td>
+                <td><%= fund.valuationpoint %></td>
+                <td><%= fund.internalsla %></td>
+                <td><%= fund.externalsla %></td>
+            </tr>
+        <% }); %>
+        </tbody>
+    </table>
+
+    <!-- Search Form -->
+    <div class="form-container">
+        <section id="search-section" class="half-width">
+            <h2>Search a Fund Record</h2>
+            <form action="/search" method="GET" class="search-form">
+                <input type="text" name="accountNumber" placeholder="Search by Account Number">
+                <button type="submit">Search</button>
+            </form>
+        </section>
+        <!-- Delete Form -->
+        <section id="delete-section" class="half-width">
+            <h2>Delete a Fund Record</h2>
+            <form action="/delete" method="POST">
+                <input type="hidden" name="_method" value="DELETE">
+                <input type="text" name="accountNumber" placeholder="Account Number" required class="mandatory-field">
+                <button type="submit">Delete Fund</button>
+            </form>
+        </section>
+    </div>
+
+    <!-- Update Section -->
+    <h2>Update Fund Record</h2>
+    <div class="container">
+        <form action="/update" method="POST" class="update-form">
+            <div class="form-row">
+                <div class="form-field">
+                    <!-- Account Number as a readonly field or as part of the form action URL -->
+                    <input type="number" name="accountNumber" placeholder="Account Number" required>
+                </div>
+                <div class="form-field">
+                    <input type="text" name="userBank" placeholder="User Bank (EM/IR)">
+                </div>
+                <div class="form-field">
+                    <input type="date" name="activeDate" placeholder="Active Date">
+                </div>
+                <div class="form-field">
+                    <input type="date" name="ValidtoDate" placeholder="Valid To Date">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-field">
+                    <input type="text" name="fundName" placeholder="Fund Name">
+                </div>
+                <div class="form-field">
+                    <select name="multiManager">
+                        <option value="">Multi Manager?</option>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <select name="legalStructure">
+                        <option value="">Legal Structure</option>
+                        <option value="OEIQ">OEIQ</option>
+                        <option value="UT">UT</option>
+                        <option value="ALTS">ALTS</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <input type="text" name="distributionDate" placeholder="Distribution Date (e.g., Q1)">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-field">
+                    <input type="number" step="0.01" name="performanceFeeRate" placeholder="Performance Fee Rate (%)">
+                </div>
+                <div class="form-field">
+                    <input type="number" step="0.01" name="ter" placeholder="Total Expense Ratio (TER %)">
+                </div>
+                <div class="form-field">
+                    <input type="text" name="valuationPoint" placeholder="Valuation Point">
+                </div>
+                <div class="form-field">
+                    <input type="time" name="internalSLA" placeholder="Internal SLA (12:00-14:00)">
+                </div>
+                <div class="form-field">
+                    <input type="time" name="externalSLA" placeholder="External SLA (14:00-17:00)">
+                </div>
+            </div>
+
+            <button type="submit">Update Fund</button>
+        </form>
+    </div>
+
+
+    <!-- Add New Fund Form -->
+    <h2>Add New Fund</h2>
+    <div class="container">
+        <form action="/add" method="POST" class="add-form">
+            <div class="form-row">
+                <div class="form-field">
+                    <input type="text" name="userBank" placeholder="User Bank (EM/IR)" required>
+                </div>
+                <div class="form-field">
+                    <input type="number" name="accountNumber" placeholder="Account Number (starts with 17)" required
+                           pattern="17[0-9]{5}">
+                </div>
+                <div class="form-field">
+                    <input type="date" name="activeDate" placeholder="Active Date" required>
+                </div>
+                <div class="form-field">
+                    <input type="date" name="ValidtoDate" placeholder="Valid To Date" required>
+                </div>
+                <div class="form-field">
+
+                    <input type="text" name="fundName" placeholder="Fund Name" required>
+                </div>
+                <div class="form-field">
+                    <select name="multiManager" required>
+                        <option value="">Multi Manager?</option>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <select name="legalStructure" required>
+                        <option value="">Legal Structure</option>
+                        <option value="OEIQ">OEIQ</option>
+                        <option value="UT">UT</option>
+                        <option value="ALTS">ALTS</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <input type="text" name="distributionDate" placeholder="Distribution Date (e.g., Q1)" required>
+                </div>
+                <div class="form-field">
+                    <input type="number" step="0.01" name="performanceFeeRate" placeholder="Performance Fee Rate (%)"
+                           required>
+                </div>
+                <div class="form-field">
+                    <input type="number" step="0.01" name="ter" placeholder="Total Expense Ratio (TER %)" required>
+                </div>
+                <div class="form-field">
+                    <input type="text" name="valuationPoint" placeholder="Valuation Point" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-field">
+                    <input type="time" name="internalSLA" placeholder="Internal SLA" required>
+                </div>
+                <div class="form-field">
+                    <input type="time" name="externalSLA" placeholder="External SLA" required>
+                </div>
+            </div>
+            <button type="submit">Add New Fund</button>
+        </form>
+    </div>
+</div>
+
+<script src="/script.js"></script>
+</body>
+</html>
