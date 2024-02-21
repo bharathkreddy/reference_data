@@ -36,6 +36,11 @@ app.get('/', async (req, res) => {
     res.render('index', { funds: result.rows });
 });
 
+app.get('/aggrid', async (req, res) => {
+    const result = await db.query('SELECT * FROM fundref');
+    res.render('index2', { funds: result.rows });
+});
+
 // Fetch a single record by accountNumber
 app.get('/search', async (req, res) => {
     const { accountNumber } = req.query;
